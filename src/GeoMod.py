@@ -1,2 +1,8 @@
+import core
+
 if __name__ == '__main__':
-	pass
+	geoMod = core.Application()
+	geoMod.run()
+
+#Polygon
+#MulitPolygon
