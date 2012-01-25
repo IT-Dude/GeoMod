@@ -4,7 +4,6 @@ class Polygon:
 		self.polygons = []
 		self.getPolygons(geometry["coordinates"])
 		self.numberOfPolygons = len(self.polygons)
-
 	def getPolygons(self, geometry):
 		if self.type == "Polygon":
 			self.polygons.append(geometry[0])
@@ -50,3 +49,23 @@ class GeoData:
 			item.printProperties()
 			item.printPolygons()
 			print()
+	
+	def searchForDuplicatePoint(self, point):
+		foundSomething = False
+		for region in self.regions:
+			for polygon in region.geometry.polygons:
+				if polygon.__contains__(point):
+					foundSomething = True
+					print(region.name + " " + region.number)
+		
+		if foundSomething == False:
+			print("Nothing found!");
+	
+	def NumberOfPoints(self):
+		count = 0
+		for region in self.regions:
+			for polygon in region.geometry.polygons:
+				for point in polygon:
+					count = count + 1
+		
+		return count
