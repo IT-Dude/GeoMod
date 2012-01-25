@@ -43,6 +43,7 @@ class GeoData:
 		self.regions = []
 		for item in data:
 			self.regions.append(Region(item))
+		print("Loading finished!")
 	
 	def printData(self):
 		for item in self.regions:
@@ -51,15 +52,34 @@ class GeoData:
 			print()
 	
 	def searchForDuplicatePoint(self, point):
-		foundSomething = False
+		count = 0
 		for region in self.regions:
 			for polygon in region.geometry.polygons:
 				if polygon.__contains__(point):
-					foundSomething = True
+					count = count + 1
 					print(region.name + " " + region.number)
 		
-		if foundSomething == False:
+		if count <= 1:
 			print("Nothing found!");
+	
+	def searchAllDuplicates(self):
+		pointDuplicates = []
+		pointNonDuplicates = []
+		
+		for region in self.regions:
+			for polygon in region.geometry.polygons:
+				for point in polygon:
+					pointNonDuplicates.append(point)
+					
+					for region2 in self.regions:
+						for polygon2 in region2.geometry.polygons:
+							if polygon != polygon2:
+								if polygon2.__contains__(point):
+									pointDuplicates.append(point)
+									if pointNonDuplicates.__contains__(point):
+										pointNonDuplicates.remove(point)
+		
+		print(pointNonDuplicates)
 	
 	def NumberOfPoints(self):
 		count = 0
