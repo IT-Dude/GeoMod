@@ -1,11 +1,13 @@
-import tkinter as tk
-import tkinter.ttk as ttk
+#import tkinter as tk
+#import tkinter.ttk as ttk
+import os
 
 class Application:
 	def __init__(self):
-		print("foo")
-		self.root = tk.Tk()
-		ttk.Button(self.root, text="Work!").grid()
-	
+		pass
+
 	def run(self):
-		self.root.mainloop()
+		file = open(os.path.join("input", "data_test.json"), "r")
+		data = file.read()
+		file.close()
+		print(data)
