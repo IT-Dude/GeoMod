@@ -1,11 +1,21 @@
 class Polygon:
 	def __init__(self, geometry):
-		self.coordinates = geometry[0]
-		pass
+		self.type = geometry["type"]
+		self.polygons = []
+		self.getPolygons(geometry["coordinates"])
+		self.numberOfPolygons = len(self.polygons)
 
-class PolygonMulti:
-	def __init__(self, geometry):
-		pass
+	def getPolygons(self, geometry):
+		if self.type == "Polygon":
+			self.polygons.append(geometry[0])
+		if self.type == "MultiPolygon":
+			for item in geometry:
+				self.polygons.append(item)
+	
+	def printPolygons(self):
+		for i in range(len(self.polygons)):
+			
+			print("Polygon " + str(i) + ": " + str(self.polygons[i]))
 
 class Region:
 	def __init__(self, obj):
@@ -14,21 +24,19 @@ class Region:
 		
 		self.name = properties["PLZORT99"]
 		self.number = properties["PLZ99"]
-		self.geometry = self.getGeometry(geometry)
-	
-	def getGeometry(self, geometry):
-		if geometry["type"] == "Polygon":
-			return Polygon(geometry["coordinates"])
-		else:
-			return PolygonMulti(geometry["coordinates"])
+		self.geometry = Polygon(geometry)
 	
 	def getGeometryType(self):
 		return type(self.geometry).__name__
 	
-	def printData(self):
+	def printProperties(self):
 		print("Name: " + self.name)
-		print("Number: " + self.name)
+		print("Number: " + self.number)
 		print("GeometryType: " + self.getGeometryType())
+	
+	def printPolygons(self):
+		print(self.geometry.type)
+		self.geometry.printPolygons()
 
 class GeoData:
 	def __init__(self, obj):
@@ -39,5 +47,6 @@ class GeoData:
 	
 	def printData(self):
 		for item in self.regions:
-			item.printData()
-		pass
+			item.printProperties()
+			item.printPolygons()
+			print()
