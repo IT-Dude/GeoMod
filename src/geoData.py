@@ -1,9 +1,11 @@
 class Polygon:
 	def __init__(self, geometry):
-		self.type = geometry["type"]
-		self.polygons = []
-		self.getPolygons(geometry["coordinates"])
-		self.numberOfPolygons = len(self.polygons)
+		if geometry != None: # TODO holy cow! are you insane???
+			self.type = geometry["type"]
+			self.polygons = []
+			self.getPolygons(geometry["coordinates"])
+			self.numberOfPolygons = len(self.polygons)
+
 	def getPolygons(self, geometry):
 		if self.type == "Polygon":
 			self.polygons.append(geometry[0])
@@ -17,20 +19,21 @@ class Polygon:
 			print("Polygon " + str(i) + ": " + str(self.polygons[i]))
 
 class Region:
-	def __init__(self, obj):
-		properties = obj["properties"]
-		geometry = obj["geometry"]
-		
-		self.name = properties["PLZORT99"]
-		self.number = properties["PLZ99"]
-		self.geometry = Polygon(geometry)
+	def __init__(self, obj):	
+		if obj != None: # TODO ffs, fix this! ASAP!!!
+			properties = obj["properties"]
+			geometry = obj["geometry"]
+			
+			self.name = properties["PLZORT99"]
+			self.number = properties["PLZ99"]
+			self.geometry = Polygon(geometry)
 	
 	def getGeometryType(self):
 		return type(self.geometry).__name__
 	
 	def printProperties(self):
 		print("Name: " + self.name)
-		print("Number: " + self.number)
+		print("Number: " + str(self.number))
 		print("GeometryType: " + self.getGeometryType())
 	
 	def printPolygons(self):
@@ -38,7 +41,7 @@ class Region:
 		self.geometry.printPolygons()
 
 class GeoData:
-	def __init__(self, obj=None, regions=None): # TODO dude, write better code!!!
+	def __init__(self, obj, regions=None): # TODO dude, write better code!!!
 		if obj != None:
 			data = obj["features"]
 			self.regions = []
@@ -85,7 +88,7 @@ class GeoData:
 		
 		print(pointNonDuplicates)
 	
-	def NumberOfPoints(self):
+	def numberOfPoints(self):
 		count = 0
 		for region in self.regions:
 			for polygon in region.geometry.polygons:
@@ -94,8 +97,30 @@ class GeoData:
 		
 		return count
 
-	def aggregatePolygons(self, prefix):
+	def createAggregatedGeoData(self, prefix):
 		aggregatedRegions = []
 		for region in self.regions:
 			if region.number.startswith(prefix):
 				aggregatedRegions.append(region)
+		return GeoData(None, aggregatedRegions)
+	
+	def mergePolygons(self):
+		aggregatedPolygon = Polygon(None)
+		aggregatedPolygon.type = "Polygon"
+		aggregatedPolygon.polygons = []
+		aggregatedRegion = Region(None)
+		
+		aggregatedRegion.name = "foo"
+		aggregatedRegion.number = "10000"
+		aggregatedRegion.geometry = aggregatedPolygon
+		
+		for region in self.regions:
+			for polygon in region.geometry.polygons:
+				aggregatedPolygon.polygons.append(polygon)
+		
+		points = []
+		for polygon in aggregatedPolygon.polygons:
+			for point in polygon:
+				points.append(point)
+			
+		self.regions = [aggregatedRegion]
