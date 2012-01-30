@@ -89,3 +89,9 @@ class GeoData:
 					count = count + 1
 		
 		return count
+
+	def aggregatePolygons(self, prefix):
+		aggregatedRegions = []
+		for region in self.regions:
+			if region.number.startswith(prefix):
+				aggregatedRegions.append(region)
