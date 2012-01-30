@@ -122,5 +122,13 @@ class GeoData:
 		for polygon in aggregatedPolygon.polygons:
 			for point in polygon:
 				points.append(point)
+		
+		uniquePoints = []
+		for point in points:
+			if point not in uniquePoints:
+				uniquePoints.append(point)
+		
+		aggregatedPolygon.polygons = []
+		aggregatedPolygon.polygons.append(uniquePoints)
 			
 		self.regions = [aggregatedRegion]

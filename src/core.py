@@ -25,6 +25,6 @@ class Application:
 		#self.data.searchAllDuplicates()
 		
 		newData = self.data.createAggregatedGeoData("041")
-		newData.printData()
+		#newData.printData()
 		newData.mergePolygons()
 		newData.printData()
