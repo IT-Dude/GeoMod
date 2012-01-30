@@ -38,12 +38,16 @@ class Region:
 		self.geometry.printPolygons()
 
 class GeoData:
-	def __init__(self, obj):
-		data = obj["features"]
-		self.regions = []
-		for item in data:
-			self.regions.append(Region(item))
-		print("Loading finished!")
+	def __init__(self, obj=None, regions=None): # TODO dude, write better code!!!
+		if obj != None:
+			data = obj["features"]
+			self.regions = []
+			for item in data:
+				self.regions.append(Region(item))
+			print("Loading finished!")
+		
+		if regions!= None:
+			self.regions = regions
 	
 	def printData(self):
 		for item in self.regions:
