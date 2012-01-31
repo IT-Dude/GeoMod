@@ -15,6 +15,7 @@ class Application:
 		dataObject = json.loads(file.read())
 		file.close()
 		self.data = geoData.GeoData(dataObject)
+		print("Loading finished!!!")
 		#self.data.printData()
 		
 		#point = [13.873481, 51.12796]
@@ -27,5 +28,4 @@ class Application:
 		
 		newData = self.data.createAggregatedGeoData("041")
 		newData.mergePolygons()
-		print("finished")
-		#newData.printData()
+		newData.printData()

@@ -127,18 +127,16 @@ class GeoData:
 		selectedPoint = selectedEdge.end
 		
 		newPolygons = []
-		count = 0
 		while len(edgeList) != 0:
-			count = count +1
-			print(count)
-			print(edgeList)
+
+			#input()
 			
-			oldEdge = Edge(None, None)
-			oldEdge.copy(selectedEdge)
+			oldEdge = selectedEdge
 			for edge in edgeList:
 				if edge.contains(selectedPoint):
 					if edge != selectedEdge:
-						selectedEdge = edge
+						selectedEdge = Edge(None, None)
+						selectedEdge.copy(edge)
 						break
 			
 			if selectedEdge.start == selectedPoint:
@@ -151,11 +149,26 @@ class GeoData:
 			if oldEdge not in edgeList:
 				newPolygons.append(mergedPolygon)
 				mergedPolygon = []
+				selectedEdge = edgeList[0]
+				mergedPolygon.append(selectedEdge.start)
+				mergedPolygon.append(selectedEdge.end)
+				selectedPoint = selectedEdge.end
 			else:
-				edgeList.remove(oldEdge)		
-				print(edgeList)
-		print(newPolygons)
-		print("foo")
+				edgeList.remove(oldEdge)
+		
+		self.regions = []
+		aRegion = Region(None)
+		aRegion.name = "foobar"
+		aRegion.number = "1000"
+		
+		aPolygon = Polygon(None)
+		aPolygon.type = "Multipolygon"
+		aPolygon.polygons = newPolygons
+		
+		aRegion.geometry = aPolygon
+		
+		self.regions.append(aRegion)
+		
 		
 
 class Edge:
