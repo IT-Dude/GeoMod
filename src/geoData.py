@@ -122,27 +122,50 @@ class GeoData:
 		edgeList = list(edges)
 		
 		selectedEdge = edgeList[0]
-		selectedPoint = selectedEdge.start
+		mergedPolygon.append(selectedEdge.start)
+		mergedPolygon.append(selectedEdge.end)
+		selectedPoint = selectedEdge.end
 		
-		mergedPolygon.append(selectedPoint)
-		
+		newPolygons = []
+		count = 0
 		while len(edgeList) != 0:
-			foundEdge = None
+			count = count +1
+			print(count)
+			print(edgeList)
+			
+			oldEdge = Edge(None, None)
+			oldEdge.copy(selectedEdge)
 			for edge in edgeList:
 				if edge.contains(selectedPoint):
 					if edge != selectedEdge:
-						foundEdge = edge
-						
+						selectedEdge = edge
+						break
 			
+			if selectedEdge.start == selectedPoint:
+				mergedPolygon.append(selectedEdge.end)
+				selectedPoint = selectedEdge.end
+			else:
+				mergedPolygon.append(selectedEdge.start)
+				selectedPoint = selectedEdge.start
 			
-		
-		print(mergedPolygon)
+			if oldEdge not in edgeList:
+				newPolygons.append(mergedPolygon)
+				mergedPolygon = []
+			else:
+				edgeList.remove(oldEdge)		
+				print(edgeList)
+		print(newPolygons)
+		print("foo")
 		
 
 class Edge:
 	def __init__(self, start, end):
 		self.start = start
 		self.end = end
+	
+	def copy(self, edge):
+		self.start = edge.start
+		self.end = edge.end
 	
 	def contains(self, value):
 		if value == self.start:
