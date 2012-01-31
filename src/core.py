@@ -20,11 +20,12 @@ class Application:
 		#point = [13.873481, 51.12796]
 		#self.data.searchForDuplicatePoint(point)
 		
+		
 		#print("Number of points: " + str(self.data.numberOfPoints()))
 		#print("unique points:")
 		#self.data.searchAllDuplicates()
 		
 		newData = self.data.createAggregatedGeoData("041")
-		#newData.printData()
 		newData.mergePolygons()
-		newData.printData()
+		print("finished")
+		#newData.printData()

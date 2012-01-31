@@ -94,7 +94,6 @@ class GeoData:
 			for polygon in region.geometry.polygons:
 				for point in polygon:
 					count = count + 1
-		
 		return count
 
 	def createAggregatedGeoData(self, prefix):
@@ -103,32 +102,52 @@ class GeoData:
 			if region.number.startswith(prefix):
 				aggregatedRegions.append(region)
 		return GeoData(None, aggregatedRegions)
-	
+
 	def mergePolygons(self):
-		aggregatedPolygon = Polygon(None)
-		aggregatedPolygon.type = "Polygon"
-		aggregatedPolygon.polygons = []
-		aggregatedRegion = Region(None)
-		
-		aggregatedRegion.name = "foo"
-		aggregatedRegion.number = "10000"
-		aggregatedRegion.geometry = aggregatedPolygon
-		
+		polygons = []
 		for region in self.regions:
 			for polygon in region.geometry.polygons:
-				aggregatedPolygon.polygons.append(polygon)
+				polygons.append(polygon)
 		
-		points = []
-		for polygon in aggregatedPolygon.polygons:
-			for point in polygon:
-				points.append(point)
+		edges = set()
+		for polygon in polygons:
+			for i in range(len(polygon)):
+				if i < (len(polygon) - 1):
+					edge = Edge(polygon[i], polygon[i + 1])
+				else:
+					edge = Edge(polygon[i], polygon[0])
+				edges.add(edge)
 		
-		uniquePoints = []
-		for point in points:
-			if point not in uniquePoints:
-				uniquePoints.append(point)
+		mergedPolygon = []
+		edgeList = list(edges)
 		
-		aggregatedPolygon.polygons = []
-		aggregatedPolygon.polygons.append(uniquePoints)
+		selectedEdge = edgeList[0]
+		selectedPoint = selectedEdge.start
+		
+		mergedPolygon.append(selectedPoint)
+		
+		while len(edgeList) != 0:
+			foundEdge = None
+			for edge in edgeList:
+				if edge.contains(selectedPoint):
+					if edge != selectedEdge:
+						foundEdge = edge
+						
 			
-		self.regions = [aggregatedRegion]
+			
+		
+		print(mergedPolygon)
+		
+
+class Edge:
+	def __init__(self, start, end):
+		self.start = start
+		self.end = end
+	
+	def contains(self, value):
+		if value == self.start:
+			return True
+		elif value == self.end:
+			return True
+		else:
+			return False
