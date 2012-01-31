@@ -109,50 +109,46 @@ class GeoData:
 			for polygon in region.geometry.polygons:
 				polygons.append(polygon)
 		
-		edges = set()
+		edgeList = []
 		for polygon in polygons:
 			for i in range(len(polygon)):
 				if i < (len(polygon) - 1):
-					edge = Edge(polygon[i], polygon[i + 1])
+					edge = [polygon[i], polygon[i + 1]]
 				else:
-					edge = Edge(polygon[i], polygon[0])
-				edges.add(edge)
+					edge = [polygon[i], polygon[0]]
+				if edge not in edgeList:
+					edgeList.append(edge)
 		
 		mergedPolygon = []
-		edgeList = list(edges)
 		
 		selectedEdge = edgeList[0]
-		mergedPolygon.append(selectedEdge.start)
-		mergedPolygon.append(selectedEdge.end)
-		selectedPoint = selectedEdge.end
+		mergedPolygon.append(selectedEdge[0])
+		mergedPolygon.append(selectedEdge[1])
+		selectedPoint = selectedEdge[0]
 		
 		newPolygons = []
 		while len(edgeList) != 0:
-
-			#input()
-			
 			oldEdge = selectedEdge
 			for edge in edgeList:
-				if edge.contains(selectedPoint):
+				if selectedPoint in edge:
 					if edge != selectedEdge:
-						selectedEdge = Edge(None, None)
-						selectedEdge.copy(edge)
+						selectedEdge = edge
 						break
 			
-			if selectedEdge.start == selectedPoint:
-				mergedPolygon.append(selectedEdge.end)
-				selectedPoint = selectedEdge.end
+			if selectedEdge[0] == selectedPoint:
+				mergedPolygon.append(selectedEdge[1])
+				selectedPoint = selectedEdge[1]
 			else:
-				mergedPolygon.append(selectedEdge.start)
-				selectedPoint = selectedEdge.start
+				mergedPolygon.append(selectedEdge[0])
+				selectedPoint = selectedEdge[0]
 			
 			if oldEdge not in edgeList:
 				newPolygons.append(mergedPolygon)
 				mergedPolygon = []
 				selectedEdge = edgeList[0]
-				mergedPolygon.append(selectedEdge.start)
-				mergedPolygon.append(selectedEdge.end)
-				selectedPoint = selectedEdge.end
+				mergedPolygon.append(selectedEdge[0])
+				mergedPolygon.append(selectedEdge[1])
+				selectedPoint = selectedEdge[1]
 			else:
 				edgeList.remove(oldEdge)
 		
@@ -168,22 +164,20 @@ class GeoData:
 		aRegion.geometry = aPolygon
 		
 		self.regions.append(aRegion)
-		
-		
+	
+	def export(self):
+		features = []
+		for region in self.regions:
+			innerFeature = {'type': 'Feature', 'properties': None, 'geometry': None}
 
-class Edge:
-	def __init__(self, start, end):
-		self.start = start
-		self.end = end
-	
-	def copy(self, edge):
-		self.start = edge.start
-		self.end = edge.end
-	
-	def contains(self, value):
-		if value == self.start:
-			return True
-		elif value == self.end:
-			return True
-		else:
-			return False
+			properties = {'PLZ99': region.number, 'PLZORT99': region.name}
+			innerFeature["properties"] = properties
+			
+			geometry = {'type': region.geometry.type, 'coordinates': region.geometry.polygons}
+			innerFeature["geometry"] = geometry
+			
+			features.append(innerFeature)
+		
+		data = {'type': 'FeatureCollection', 'features': None}
+		data["features"] = features
+		return data
