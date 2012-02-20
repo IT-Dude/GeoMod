@@ -37,22 +37,6 @@ class Application:
 		file.close()
 		print("File written!")
 	
-	def draw(self):
-		self.canvas.create_line(10, 10, 200, 50, fill = "red", width = 10)
-	
-	def loadArea(self, prefix):
-		file = open(os.path.join("input", "data_detailed.json"), "r")
-		dataObject = json.loads(file.read())
-		file.close()
-		self.data = geoData.GeoData(dataObject)
-		
-		self.aggregatedData = self.data.createAggregatedGeoData(prefix)
-		self.aggregatedData.mergePolygons()
-		self.aggregatedData.searchAllDuplicates()
-	
-	def printData(self):
-		self.aggregatedData.printData()
-	
 	def createWindow(self):
 		root = tk.Tk()
 		root.title("GeoMod")
@@ -69,16 +53,33 @@ class Application:
 		prefixInput.focus()
 
 		ttk.Button(rootFrame, text = "load area", command = lambda: self.loadArea(prefix.get())).grid(column = 0, row = 1)
-		ttk.Button(rootFrame, text = "print data", command = self.printData).grid(column = 0, row = 2)
+		ttk.Button(rootFrame, text = "print all data", command = lambda: self.printData(self.data)).grid(column = 0, row = 2)
+		ttk.Button(rootFrame, text = "print aggregated data", command = lambda: self.printData(self.aggregatedData)).grid(column = 0, row = 3)
 
 		option = tk.StringVar(root)
 		option.set("convex hull")
-		tk.OptionMenu(rootFrame, option, "convex hull", "concave hull").grid(column = 0, row = 3) # TODO make this work with the TTK version
+		tk.OptionMenu(rootFrame, option, "convex hull", "concave hull").grid(column = 0, row = 4) # TODO make this work with the TTK version
 		
-		ttk.Button(rootFrame, text = "Draw", command = self.draw).grid(column = 0, row = 4)
-		ttk.Button(rootFrame, text = "Work", command = self.run).grid(column = 0, row = 5)
+		ttk.Button(rootFrame, text = "Draw", command = self.draw).grid(column = 0, row = 5)
+		ttk.Button(rootFrame, text = "Work", command = self.run).grid(column = 0, row = 6)
 		
 		self.canvas = tk.Canvas(rootFrame, width = 400, height = 400, bg = "white")
-		self.canvas.grid(column = 2, row = 0, rowspan = 4)
+		self.canvas.grid(column = 2, row = 0, rowspan = 7)
 		
 		root.mainloop()
+	
+	def loadArea(self, prefix):
+		file = open(os.path.join("input", "data_detailed.json"), "r")
+		dataObject = json.loads(file.read())
+		file.close()
+		self.data = geoData.GeoData(dataObject)
+		
+		self.aggregatedData = self.data.createAggregatedGeoData(prefix)
+		self.aggregatedData.mergePolygons()
+		self.aggregatedData.searchAllDuplicates()
+	
+	def printData(self, data):
+		data.printData()
+	
+	def draw(self):
+		self.canvas.create_line(10, 10, 200, 50, fill = "red", width = 10)
