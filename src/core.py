@@ -48,15 +48,24 @@ class Application:
 		
 		rootFrame = ttk.Frame(root)
 		rootFrame.grid(column = 0, row = 0, sticky = (tk.N, tk.S, tk.W, tk.E))
+		
+		ttk.Label(rootFrame, text="region prefix").grid(column = 0, row = 0)
+		
+		prefix = tk.StringVar()
+		prefixInput = ttk.Entry(rootFrame, width = 7, textvariable = prefix)
+		prefixInput.grid(column = 1, row = 0)
+		prefixInput.focus()
+
+		ttk.Button(rootFrame, text = "load area", command = self.run).grid(column = 0, row = 1)
 
 		option = tk.StringVar(root)
 		option.set("convex hull")
-		tk.OptionMenu(rootFrame, option, "convex hull", "concave hull").grid(column = 0, row = 0) # TODO make this work with the TTK version
+		tk.OptionMenu(rootFrame, option, "convex hull", "concave hull").grid(column = 0, row = 2) # TODO make this work with the TTK version
 		
-		ttk.Button(rootFrame, text = "Work", command = self.run).grid(column = 0, row = 1)
-		ttk.Button(rootFrame, text = "Draw", command = self.draw).grid(column = 0, row = 2)
+		ttk.Button(rootFrame, text = "Draw", command = self.draw).grid(column = 0, row = 3)
+		ttk.Button(rootFrame, text = "Work", command = self.run).grid(column = 0, row = 4)
 		
 		self.canvas = tk.Canvas(rootFrame, width = 400, height = 400, bg = "white")
-		self.canvas.grid(column = 1, row = 0)
+		self.canvas.grid(column = 2, row = 0, rowspan = 4)
 		
 		root.mainloop()
