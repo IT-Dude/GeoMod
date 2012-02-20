@@ -98,7 +98,8 @@ class Application:
 					points.append(point[0])
 					points.append(point[1])
 				p = self.canvas.create_polygon(points, outline = "red", fill = "green", width = 2)
-				self.canvas.scale(p, points[0], points[1], 4000, 4000)
+				self.canvas.scale(p, points[0], points[1], 3500, 3500)
+				self.canvas.move(p, 200, 200)
 	
 	def drawMergedArea(self, data):
 		pass
