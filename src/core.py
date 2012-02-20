@@ -11,8 +11,6 @@ class Application:
 		pass
 
 	def run(self):
-		#self.createWindow()
-		
 		file = open(os.path.join("input", "data_detailed.json"), "r")
 		dataObject = json.loads(file.read())
 		file.close()
@@ -42,6 +40,17 @@ class Application:
 	def draw(self):
 		self.canvas.create_line(10, 10, 200, 50, fill = "red", width = 10)
 	
+	def loadArea(self, prefix):
+		file = open(os.path.join("input", "data_detailed.json"), "r")
+		dataObject = json.loads(file.read())
+		file.close()
+		self.data = geoData.GeoData(dataObject)
+		
+		self.aggregatedData = self.data.createAggregatedGeoData(prefix)
+		self.aggregatedData.mergePolygons()
+		self.aggregatedData.searchAllDuplicates()
+		self.aggregatedData.printData()
+	
 	def createWindow(self):
 		root = tk.Tk()
 		root.title("GeoMod")
@@ -49,14 +58,14 @@ class Application:
 		rootFrame = ttk.Frame(root)
 		rootFrame.grid(column = 0, row = 0, sticky = (tk.N, tk.S, tk.W, tk.E))
 		
-		ttk.Label(rootFrame, text="region prefix").grid(column = 0, row = 0)
+		ttk.Label(rootFrame, text="region prefix (e.g. 041)").grid(column = 0, row = 0)
 		
 		prefix = tk.StringVar()
 		prefixInput = ttk.Entry(rootFrame, width = 7, textvariable = prefix)
 		prefixInput.grid(column = 1, row = 0)
 		prefixInput.focus()
 
-		ttk.Button(rootFrame, text = "load area", command = self.run).grid(column = 0, row = 1)
+		ttk.Button(rootFrame, text = "load area", command = lambda: self.loadArea(prefix.get())).grid(column = 0, row = 1)
 
 		option = tk.StringVar(root)
 		option.set("convex hull")
