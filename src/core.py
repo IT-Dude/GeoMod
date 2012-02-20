@@ -60,10 +60,10 @@ class Application:
 		option.set("convex hull")
 		tk.OptionMenu(rootFrame, option, "convex hull", "concave hull").grid(column = 0, row = 4) # TODO make this work with the TTK version
 		
-		ttk.Button(rootFrame, text = "Draw", command = self.draw).grid(column = 0, row = 5)
-		ttk.Button(rootFrame, text = "Work", command = self.run).grid(column = 0, row = 6)
+		ttk.Button(rootFrame, text = "draw merged area", command = lambda: self.drawMergedArea(self.aggregatedData)).grid(column = 0, row = 5)
+		#ttk.Button(rootFrame, text = "Work", command = self.run).grid(column = 0, row = 6)
 		
-		self.canvas = tk.Canvas(rootFrame, width = 400, height = 400, bg = "white")
+		self.canvas = tk.Canvas(rootFrame, width = 700, height = 700, bg = "white")
 		self.canvas.grid(column = 2, row = 0, rowspan = 7)
 		
 		
@@ -97,12 +97,20 @@ class Application:
 				for point in polygon:
 					points.append(point[0])
 					points.append(point[1])
-				p = self.canvas.create_polygon(points, outline = "red", fill = "green", width = 2)
+				p = self.canvas.create_polygon(points, outline = "red", fill = "green", width = 5)
 				self.canvas.scale(p, points[0], points[1], 3500, 3500)
 				self.canvas.move(p, 200, 200)
 	
 	def drawMergedArea(self, data):
-		pass
+		for region in data.regions:
+			for polygon in region.geometry.polygons:
+				points = []
+				for point in polygon:
+					points.append(point[0])
+					points.append(point[1])
+				p = self.canvas.create_polygon(points, outline = "black", fill = "", width = 2)
+				self.canvas.scale(p, points[0], points[1], 3500, 3500)
+				self.canvas.move(p, 200, 200)
 	
 	def draw(self):
 		self.canvas.create_line(10, 10, 200, 50, fill = "red", width = 10)
