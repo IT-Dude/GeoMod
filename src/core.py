@@ -53,8 +53,8 @@ class Application:
 		prefixInput.focus()
 
 		ttk.Button(rootFrame, text = "load area", command = lambda: self.loadArea(prefix.get())).grid(column = 0, row = 1)
-		ttk.Button(rootFrame, text = "print all data", command = lambda: self.printData(self.data)).grid(column = 0, row = 2)
-		ttk.Button(rootFrame, text = "print aggregated data", command = lambda: self.printData(self.aggregatedData)).grid(column = 0, row = 3)
+		ttk.Button(rootFrame, text = "print all data (slow!)", command = lambda: self.printData(self.data)).grid(column = 0, row = 2)
+		ttk.Button(rootFrame, text = "print aggregated data", command = lambda: self.printData(self.aggregatedData)).grid(column = 1, row = 2)
 
 		option = tk.StringVar(root)
 		option.set("convex hull")
@@ -75,11 +75,21 @@ class Application:
 		self.data = geoData.GeoData(dataObject)
 		
 		self.aggregatedData = self.data.createAggregatedGeoData(prefix)
+		self.drawArea(self.aggregatedData)
+		
 		self.aggregatedData.mergePolygons()
 		self.aggregatedData.searchAllDuplicates()
 	
 	def printData(self, data):
 		data.printData()
+	
+	def drawArea(self, data):
+		for region in data.regions:
+			for polygon in region.geometry.polygons:
+				self.canvas.create_polygon(polygon, outline = "red", fill = "green", width = 10)
+	
+	def drawMergedArea(self, data):
+		pass
 	
 	def draw(self):
 		self.canvas.create_line(10, 10, 200, 50, fill = "red", width = 10)
