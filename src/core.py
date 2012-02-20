@@ -66,6 +66,12 @@ class Application:
 		self.canvas = tk.Canvas(rootFrame, width = 400, height = 400, bg = "white")
 		self.canvas.grid(column = 2, row = 0, rowspan = 7)
 		
+		
+		
+		#points = [150, 100, 200, 120, 240, 180, 210, 200, 150, 150, 100, 200]
+		#p = self.canvas.create_polygon(points, outline = "red", fill = "green", width = 2)
+		#self.canvas.scale(p, 100, 100, 2, 2)
+		
 		root.mainloop()
 	
 	def loadArea(self, prefix):
@@ -86,7 +92,12 @@ class Application:
 	def drawArea(self, data):
 		for region in data.regions:
 			for polygon in region.geometry.polygons:
-				self.canvas.create_polygon(polygon, outline = "red", fill = "green", width = 10)
+				points = []
+				for point in polygon:
+					points.append(point[0])
+					points.append(point[1])
+				p = self.canvas.create_polygon(points, outline = "red", fill = "green", width = 2)
+				self.canvas.scale(p, points[0], points[1], 4000, 4000)
 	
 	def drawMergedArea(self, data):
 		pass
