@@ -52,6 +52,13 @@ class GeoData:
 		if regions!= None:
 			self.regions = regions
 	
+	
+	def parseData(self, obj):
+		pass
+	
+	def setRegions(self,regions):
+		self.regions = regions
+	
 	def printData(self):
 		for item in self.regions:
 			item.printProperties()
