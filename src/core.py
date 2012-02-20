@@ -11,7 +11,7 @@ class Application:
 		pass
 
 	def run(self):
-		self.createWindow()
+		#self.createWindow()
 		
 		file = open(os.path.join("input", "data_detailed.json"), "r")
 		dataObject = json.loads(file.read())
@@ -39,6 +39,9 @@ class Application:
 		file.close()
 		print("File written!")
 	
+	def draw(self):
+		self.canvas.create_line(10, 10, 200, 50, fill = "red", width = 10)
+	
 	def createWindow(self):
 		root = tk.Tk()
 		root.title("GeoMod")
@@ -50,8 +53,10 @@ class Application:
 		option.set("convex hull")
 		tk.OptionMenu(rootFrame, option, "convex hull", "concave hull").grid(column = 0, row = 0) # TODO make this work with the TTK version
 		
-		ttk.Button(rootFrame, text="Work! (not yet!)").grid(column = 0, row = 1)
+		ttk.Button(rootFrame, text = "Work", command = self.run).grid(column = 0, row = 1)
+		ttk.Button(rootFrame, text = "Draw", command = self.draw).grid(column = 0, row = 2)
 		
-		tk.Canvas(rootFrame).grid(column = 1, row = 0)
+		self.canvas = tk.Canvas(rootFrame, width = 400, height = 400, bg = "white")
+		self.canvas.grid(column = 1, row = 0)
 		
 		root.mainloop()
