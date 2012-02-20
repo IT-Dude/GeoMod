@@ -90,6 +90,7 @@ class Application:
 		data.printData()
 	
 	def drawArea(self, data):
+		self.canvas.delete(tk.ALL)
 		for region in data.regions:
 			for polygon in region.geometry.polygons:
 				points = []
