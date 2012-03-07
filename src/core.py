@@ -38,6 +38,9 @@ class Application:
 		print("File written!")
 	
 	def createWindow(self):
+		self.canvasWidth = 700
+		self.canvasHeight = 700
+		
 		root = tk.Tk()
 		root.title("GeoMod")
 		
@@ -63,10 +66,8 @@ class Application:
 		ttk.Button(rootFrame, text = "draw merged area", command = lambda: self.drawMergedArea(self.aggregatedData)).grid(column = 0, row = 5)
 		#ttk.Button(rootFrame, text = "Work", command = self.run).grid(column = 0, row = 6)
 		
-		self.canvas = tk.Canvas(rootFrame, width = 700, height = 700, bg = "white")
+		self.canvas = tk.Canvas(rootFrame, width = self.canvasWidth, height = self.canvasHeight, bg = "white")
 		self.canvas.grid(column = 2, row = 0, rowspan = 7)
-		
-		
 		
 		#points = [150, 100, 200, 120, 240, 180, 210, 200, 150, 150, 100, 200]
 		#p = self.canvas.create_polygon(points, outline = "red", fill = "green", width = 2)
@@ -90,6 +91,30 @@ class Application:
 		data.printData()
 	
 	def drawArea(self, data):
+		xMin = 180
+		xMax = -180
+		yMin = 90
+		yMax = -90
+		
+		#get minimum and maximum values first so scaling everything later will not be necessary
+		for region in data.regions:
+			for polygon in region.geometry.polygons:
+				for point in polygon:
+					if point[0] < xMin:
+						xMin = point[0]
+					if point[0] > xMax:
+						xMax = point[0]
+					if point[1] < yMin:
+						yMin = point[1]
+					if point[1] > yMax:
+						yMax = point[1]
+		
+		print("xMin: " + str(xMin))
+		print("xMax: " + str(xMax))
+		print("yMin: " + str(yMin))
+		print("yMax: " + str(yMax))
+		
+		#draw
 		self.canvas.delete(tk.ALL)
 		for region in data.regions:
 			for polygon in region.geometry.polygons:
