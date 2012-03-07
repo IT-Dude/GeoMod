@@ -120,22 +120,41 @@ class Application:
 			for polygon in region.geometry.polygons:
 				points = []
 				for point in polygon:
-					points.append(point[0])
-					points.append(point[1])
+					points.append(((point[0] - xMin) / (xMax - xMin)) * self.canvasWidth)
+					points.append(((point[1] - yMin) / (yMax - yMin)) * self.canvasHeight)
 				p = self.canvas.create_polygon(points, outline = "red", fill = "green", width = 5)
-				self.canvas.scale(p, points[0], points[1], 3500, 3500)
-				self.canvas.move(p, 200, 200)
 	
 	def drawMergedArea(self, data):
+		xMin = 180
+		xMax = -180
+		yMin = 90
+		yMax = -90
+		
+		#get minimum and maximum values first so scaling everything later will not be necessary
+		for region in data.regions:
+			for polygon in region.geometry.polygons:
+				for point in polygon:
+					if point[0] < xMin:
+						xMin = point[0]
+					if point[0] > xMax:
+						xMax = point[0]
+					if point[1] < yMin:
+						yMin = point[1]
+					if point[1] > yMax:
+						yMax = point[1]
+		
+		print("xMin: " + str(xMin))
+		print("xMax: " + str(xMax))
+		print("yMin: " + str(yMin))
+		print("yMax: " + str(yMax))
+		
 		for region in data.regions:
 			for polygon in region.geometry.polygons:
 				points = []
 				for point in polygon:
-					points.append(point[0])
-					points.append(point[1])
+					points.append(((point[0] - xMin) / (xMax - xMin)) * self.canvasWidth)
+					points.append(((point[1] - yMin) / (yMax - yMin)) * self.canvasHeight)
 				p = self.canvas.create_polygon(points, outline = "black", fill = "", width = 2)
-				self.canvas.scale(p, points[0], points[1], 3500, 3500)
-				self.canvas.move(p, 200, 200)
 	
 	def draw(self):
 		self.canvas.create_line(10, 10, 200, 50, fill = "red", width = 10)
