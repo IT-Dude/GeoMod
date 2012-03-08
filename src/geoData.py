@@ -1,4 +1,4 @@
-class Polygon:
+class GeoPolygon:
 	def __init__(self, geometry):
 		if geometry != None: # TODO holy cow! are you insane???
 			self.type = geometry["type"]
@@ -16,7 +16,7 @@ class Polygon:
 	def printPolygons(self):
 		for i in range(len(self.polygons)):
 			
-			print("Polygon " + str(i) + ": " + str(self.polygons[i]))
+			print("GeoPolygon " + str(i) + ": " + str(self.polygons[i]))
 
 class Region:
 	def __init__(self, obj):	
@@ -26,7 +26,7 @@ class Region:
 			
 			self.name = properties["PLZORT99"]
 			self.number = properties["PLZ99"]
-			self.geometry = Polygon(geometry)
+			self.geometry = GeoPolygon(geometry)
 	
 	def getGeometryType(self):
 		return type(self.geometry).__name__
@@ -164,7 +164,7 @@ class GeoData:
 		aRegion.name = "foobar"
 		aRegion.number = "1000"
 		
-		aPolygon = Polygon(None)
+		aPolygon = GeoPolygon(None)
 		aPolygon.type = "Multipolygon"
 		aPolygon.polygons = newPolygons
 		
@@ -192,7 +192,7 @@ class GeoData:
 		aRegion.name = "foobar"
 		aRegion.number = "1000"
 		
-		aPolygon = Polygon(None)
+		aPolygon = GeoPolygon(None)
 		aPolygon.type = "Multipolygon"
 		aPolygon.polygons = newPolygons
 		
