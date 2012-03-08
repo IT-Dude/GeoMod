@@ -19,3 +19,13 @@ class Triangle:
 	def __init__(self):
 		self.vertices = []
 		self.neighborTriangles = []
+
+class Polygon:
+	def __init__(self):
+		self.vertices = []
+	
+	def split(self):
+		pass
+	
+	def join(self):
+		pass
