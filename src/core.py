@@ -63,7 +63,7 @@ class Application:
 		option.set("convex hull")
 		tk.OptionMenu(rootFrame, option, "convex hull", "concave hull").grid(column = 0, row = 4) # TODO make this work with the TTK version
 		
-		ttk.Button(rootFrame, text = "draw merged area", command = lambda: self.drawMergedArea(self.aggregatedData)).grid(column = 0, row = 5)
+		ttk.Button(rootFrame, text = "draw merged area", command = lambda: self.drawArea(self.aggregatedData, "black", "", 2, False)).grid(column = 0, row = 5)
 		#ttk.Button(rootFrame, text = "Work", command = self.run).grid(column = 0, row = 6)
 		
 		self.canvas = tk.Canvas(rootFrame, width = self.canvasWidth, height = self.canvasHeight, bg = "white")
@@ -82,7 +82,7 @@ class Application:
 		self.data = geoData.GeoData(dataObject)
 		
 		self.aggregatedData = self.data.createAggregatedGeoData(prefix)
-		self.drawArea(self.aggregatedData)
+		self.drawArea(self.aggregatedData, "green", "red", 5)
 		
 		self.aggregatedData.mergePolygons()
 		self.aggregatedData.searchAllDuplicates()
@@ -90,7 +90,7 @@ class Application:
 	def printData(self, data):
 		data.printData()
 	
-	def drawArea(self, data):
+	def drawArea(self, data, outerColor = "black", innerColor = "white", strokeWidth = 5, delete = True):
 		xMin = 180
 		xMax = -180
 		yMin = 90
@@ -115,46 +115,13 @@ class Application:
 		print("yMax: " + str(yMax))
 		
 		#draw
-		self.canvas.delete(tk.ALL)
+		if(delete == True):
+			self.canvas.delete(tk.ALL)
+
 		for region in data.regions:
 			for polygon in region.geometry.polygons:
 				points = []
 				for point in polygon:
 					points.append(((point[0] - xMin) / (xMax - xMin)) * self.canvasWidth)
 					points.append(((point[1] - yMin) / (yMax - yMin)) * self.canvasHeight)
-				p = self.canvas.create_polygon(points, outline = "red", fill = "green", width = 5)
-	
-	def drawMergedArea(self, data):
-		xMin = 180
-		xMax = -180
-		yMin = 90
-		yMax = -90
-		
-		#get minimum and maximum values first so scaling everything later will not be necessary
-		for region in data.regions:
-			for polygon in region.geometry.polygons:
-				for point in polygon:
-					if point[0] < xMin:
-						xMin = point[0]
-					if point[0] > xMax:
-						xMax = point[0]
-					if point[1] < yMin:
-						yMin = point[1]
-					if point[1] > yMax:
-						yMax = point[1]
-		
-		print("xMin: " + str(xMin))
-		print("xMax: " + str(xMax))
-		print("yMin: " + str(yMin))
-		print("yMax: " + str(yMax))
-		
-		for region in data.regions:
-			for polygon in region.geometry.polygons:
-				points = []
-				for point in polygon:
-					points.append(((point[0] - xMin) / (xMax - xMin)) * self.canvasWidth)
-					points.append(((point[1] - yMin) / (yMax - yMin)) * self.canvasHeight)
-				p = self.canvas.create_polygon(points, outline = "black", fill = "", width = 2)
-	
-	def draw(self):
-		self.canvas.create_line(10, 10, 200, 50, fill = "red", width = 10)
+				p = self.canvas.create_polygon(points, outline = outerColor, fill = innerColor, width = strokeWidth)
