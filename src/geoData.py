@@ -172,6 +172,34 @@ class GeoData:
 		
 		self.regions.append(aRegion)
 	
+	def triangulate(self):
+		
+		points = []
+		for region in self.regions:
+			for polygon in region.geometry.polygons:
+				for point in polygon:
+					points.append(point)
+		
+		
+		
+		
+		print(points)
+		newPolygons = []
+		newPolygons.append(points)
+		
+		self.regions = []
+		aRegion = Region(None)
+		aRegion.name = "foobar"
+		aRegion.number = "1000"
+		
+		aPolygon = Polygon(None)
+		aPolygon.type = "Multipolygon"
+		aPolygon.polygons = newPolygons
+		
+		aRegion.geometry = aPolygon
+		
+		self.regions.append(aRegion)
+	
 	def export(self):
 		features = []
 		for region in self.regions:

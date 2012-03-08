@@ -82,6 +82,9 @@ class Application:
 		
 		self.aggregatedData.mergePolygons()
 		self.aggregatedData.searchAllDuplicates()
+		self.aggregatedData.triangulate()
+		
+		
 	
 	def printData(self, data):
 		data.printData()
