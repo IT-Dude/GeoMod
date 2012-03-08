@@ -69,10 +69,6 @@ class Application:
 		self.canvas = tk.Canvas(rootFrame, width = self.canvasWidth, height = self.canvasHeight, bg = "white")
 		self.canvas.grid(column = 2, row = 0, rowspan = 7)
 		
-		#points = [150, 100, 200, 120, 240, 180, 210, 200, 150, 150, 100, 200]
-		#p = self.canvas.create_polygon(points, outline = "red", fill = "green", width = 2)
-		#self.canvas.scale(p, 100, 100, 2, 2)
-		
 		root.mainloop()
 	
 	def loadArea(self, prefix):
@@ -82,7 +78,7 @@ class Application:
 		self.data = geoData.GeoData(dataObject)
 		
 		self.aggregatedData = self.data.createAggregatedGeoData(prefix)
-		self.drawArea(self.aggregatedData, "green", "red", 5)
+		self.drawArea(self.aggregatedData, "green", "red", 7)
 		
 		self.aggregatedData.mergePolygons()
 		self.aggregatedData.searchAllDuplicates()
